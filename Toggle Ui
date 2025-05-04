@@ -1,45 +1,25 @@
--- Toggle UI Button by bcm2007
-
-local CoreGui = game:GetService("CoreGui")
+-- toggle_ui.lua
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "BCM_ToggleUI"
+local ToggleButton = Instance.new("ImageButton")
+local CoreGui = game:GetService("CoreGui")
+
+ScreenGui.Name = "BCM2007_ToggleUI"
 ScreenGui.ResetOnSpawn = false
-ScreenGui.IgnoreGuiInset = true
 ScreenGui.Parent = CoreGui
 
-local ToggleButton = Instance.new("TextButton")
-ToggleButton.Name = "ToggleUIButton"
+ToggleButton.Name = "ToggleButton"
 ToggleButton.Parent = ScreenGui
-ToggleButton.Size = UDim2.new(0, 50, 0, 50)
-ToggleButton.Position = UDim2.new(1, -60, 1, -60)
-ToggleButton.BackgroundColor3 = Color3.fromRGB(255, 100, 100)
-ToggleButton.Text = "UI"
-ToggleButton.TextColor3 = Color3.new(1, 1, 1)
-ToggleButton.TextScaled = true
-ToggleButton.Font = Enum.Font.GothamBold
-ToggleButton.BorderSizePixel = 0
-ToggleButton.BackgroundTransparency = 0
-ToggleButton.ClipsDescendants = true
-ToggleButton.ZIndex = 9999
-ToggleButton.AutoButtonColor = true
-ToggleButton.AnchorPoint = Vector2.new(0, 0)
-ToggleButton.SizeConstraint = Enum.SizeConstraint.RelativeYY
-ToggleButton.UICorner = Instance.new("UICorner", ToggleButton)
-ToggleButton.UICorner.CornerRadius = UDim.new(1, 0) -- Hình tròn
+ToggleButton.BackgroundTransparency = 1
+ToggleButton.Size = UDim2.new(0, 60, 0, 60)
+ToggleButton.Position = UDim2.new(1, -70, 1, -70)
+ToggleButton.Image = "rbxassetid://6035047409" -- icon tròn
 
--- Tìm GUI chính
-local MainUI = CoreGui:FindFirstChild("BCM_UI") -- Đặt đúng tên UI chính
+-- Chờ UI chính được tạo
+repeat task.wait() until CoreGui:FindFirstChild("BCM2007_UI")
 
-local isOpen = true
+local MainUI = CoreGui:FindFirstChild("BCM2007_UI")
+MainUI.Enabled = true
 
 ToggleButton.MouseButton1Click:Connect(function()
-	if MainUI then
-		isOpen = not isOpen
-		MainUI.Enabled = isOpen
-		if isOpen then
-			ToggleButton.BackgroundColor3 = Color3.fromRGB(100, 255, 100)
-		else
-			ToggleButton.BackgroundColor3 = Color3.fromRGB(255, 100, 100)
-		end
-	end
+	MainUI.Enabled = not MainUI.Enabled
 end)
