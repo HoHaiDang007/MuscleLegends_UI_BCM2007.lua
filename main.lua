@@ -1,147 +1,99 @@
--- dangdepzai - Muscle Legends Rainbow V3 Full Script
--- UI by Instance.new - compatible with KRNL Mobile
+-- dangdepzai - Muscle Legends Rainbow V3 UI
 -- Creator: Bcm2007
 
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+-- Bảo vệ UI không bị mất khi chết
+local function protectUI(gui)
+    if not gui then return end
+    gui.ResetOnSpawn = false
+    LocalPlayer.CharacterAdded:Connect(function()
+        task.wait(1)
+        gui.Parent = LocalPlayer:WaitForChild("PlayerGui")
+    end)
+end
+
+-- Tạo UI cơ bản
 local ScreenGui = Instance.new("ScreenGui")
-local MainFrame = Instance.new("Frame")
-local Title = Instance.new("TextLabel")
-local Tabs = Instance.new("Frame")
-local AutoStrengthBtn = Instance.new("TextButton")
-local AutoRebirthBtn = Instance.new("TextButton")
-local AutoPunchBtn = Instance.new("TextButton")
-local AutoKillBtn = Instance.new("TextButton")
-local AutoPetBtn = Instance.new("TextButton")
-local AutoAuraBtn = Instance.new("TextButton")
-local WalkSpeedSlider = Instance.new("TextBox")
-local JumpPowerSlider = Instance.new("TextBox")
-local FlyButton = Instance.new("TextButton")
-local AntiAfk = Instance.new("TextButton")
-
--- GUI Setup
 ScreenGui.Name = "RainbowV3"
-ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+protectUI(ScreenGui)
+ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
 
+-- Khung chính
+local MainFrame = Instance.new("Frame")
 MainFrame.Name = "MainFrame"
 MainFrame.Parent = ScreenGui
-MainFrame.BackgroundColor3 = Color3.fromRGB(255, 192, 203)
-MainFrame.Position = UDim2.new(0.3, 0, 0.2, 0)
-MainFrame.Size = UDim2.new(0, 400, 0, 350)
+MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+MainFrame.Position = UDim2.new(0.3, 0, 0.3, 0)
+MainFrame.Size = UDim2.new(0, 350, 0, 300)
 MainFrame.Active = true
 MainFrame.Draggable = true
 
+-- Tiêu đề
+local Title = Instance.new("TextLabel")
 Title.Name = "Title"
 Title.Parent = MainFrame
-Title.BackgroundColor3 = Color3.fromRGB(255, 168, 200)
+Title.BackgroundTransparency = 1
+Title.Position = UDim2.new(0, 0, 0, 0)
 Title.Size = UDim2.new(1, 0, 0, 40)
-Title.Font = Enum.Font.FredokaOne
-Title.Text = "bcm2000 - Rainbow V3"
-Title.TextColor3 = Color3.new(1, 1, 1)
-Title.TextScaled = true
+Title.Font = Enum.Font.GothamBold
+Title.Text = "Muscle Legends - Rainbow V3"
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.TextSize = 16
 
-Tabs.Name = "Tabs"
-Tabs.Parent = MainFrame
-Tabs.BackgroundTransparency = 1
-Tabs.Position = UDim2.new(0, 0, 0, 45)
-Tabs.Size = UDim2.new(1, 0, 1, -45)
+-- Nút Auto Strength
+local AutoStrengthBtn = Instance.new("TextButton")
+AutoStrengthBtn.Name = "AutoStrengthBtn"
+AutoStrengthBtn.Parent = MainFrame
+AutoStrengthBtn.Position = UDim2.new(0.05, 0, 0.2, 0)
+AutoStrengthBtn.Size = UDim2.new(0, 300, 0, 40)
+AutoStrengthBtn.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+AutoStrengthBtn.Font = Enum.Font.GothamBold
+AutoStrengthBtn.Text = "Auto Strength: OFF"
+AutoStrengthBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+AutoStrengthBtn.TextSize = 14
 
-function createButton(name, posY, callback)
-	local button = Instance.new("TextButton")
-	button.Name = name
-	button.Parent = Tabs
-	button.Position = UDim2.new(0.05, 0, 0, posY)
-	button.Size = UDim2.new(0.9, 0, 0, 30)
-	button.BackgroundColor3 = Color3.fromRGB(255, 150, 200)
-	button.Font = Enum.Font.GothamBold
-	button.Text = name
-	button.TextColor3 = Color3.new(1,1,1)
-	button.TextScaled = true
-	button.MouseButton1Click:Connect(callback)
-	return button
-end
+_G.AutoStrength = false
+local equippedTool = nil
 
--- Features
-local autoStrength = false
-createButton("Auto Strength", 0, function()
-	autoStrength = not autoStrength
-	while autoStrength do
-		game:GetService("ReplicatedStorage").Events.MuscleEvent:FireServer("GainMuscle")
-		wait()
-	end
+AutoStrengthBtn.MouseButton1Click:Connect(function()
+    _G.AutoStrength = not _G.AutoStrength
+    if _G.AutoStrength then
+        AutoStrengthBtn.Text = "Auto Strength: ON"
+        AutoStrengthBtn.BackgroundColor3 = Color3.fromRGB(0, 170, 0)
+    else
+        AutoStrengthBtn.Text = "Auto Strength: OFF"
+        AutoStrengthBtn.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+    end
 end)
 
-local autoPunch = false
-createButton("Auto Punch", 35, function()
-	autoPunch = not autoPunch
-	while autoPunch do
-		game:GetService("ReplicatedStorage").Events.Training:FireServer("punch")
-		wait()
-	end
-end)
-
-local autoKill = false
-createButton("Auto Kill", 70, function()
-	autoKill = not autoKill
-	while autoKill do
-		for _, player in pairs(game.Players:GetPlayers()) do
-			if player ~= game.Players.LocalPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-				game:GetService("ReplicatedStorage").Events.rEvents.hitPlayer:FireServer(player.Character)
-			end
-		end
-		wait(0.5)
-	end
-end)
-
-local autoRebirth = false
-createButton("Auto Rebirth", 105, function()
-	autoRebirth = not autoRebirth
-	while autoRebirth do
-		game:GetService("ReplicatedStorage").Events.MuscleEvent:FireServer("Rebirth")
-		wait(2)
-	end
-end)
-
-local autoPet = false
-createButton("Auto Pet", 140, function()
-	autoPet = not autoPet
-	while autoPet do
-		game:GetService("ReplicatedStorage").Events.DataEvent:InvokeServer("buyEgg", "BlueCrystal")
-		wait(1.5)
-	end
-end)
-
-local autoAura = false
-createButton("Auto Aura", 175, function()
-	autoAura = not autoAura
-	while autoAura do
-		game:GetService("ReplicatedStorage").Events.DataEvent:InvokeServer("buyAura", "Dark Lightning")
-		wait(2)
-	end
-end)
-
-createButton("Set WalkSpeed: 100", 210, function()
-	game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 100
-end)
-
-createButton("Set JumpPower: 120", 245, function()
-	game.Players.LocalPlayer.Character.Humanoid.JumpPower = 120
-end)
-
-createButton("Enable Fly", 280, function()
-	local Humanoid = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
-	if Humanoid then
-		local bp = Instance.new("BodyPosition", Humanoid.RootPart)
-		bp.Position = Humanoid.RootPart.Position + Vector3.new(0, 100, 0)
-		bp.MaxForce = Vector3.new(100000, 100000, 100000)
-		wait(3)
-		bp:Destroy()
-	end
-end)
-
-createButton("Anti AFK", 315, function()
-	local vu = game:service("VirtualUser")
-	game:service("Players").LocalPlayer.Idled:connect(function()
-		vu:Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
-		wait(1)
-		vu:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
-	end)
+spawn(function()
+    while task.wait() do
+        if _G.AutoStrength then
+            local char = LocalPlayer.Character
+            local toolEquipped = char and char:FindFirstChildOfClass("Tool")
+            if not equippedTool then
+                for _, v in pairs(LocalPlayer.Backpack:GetChildren()) do
+                    if v:IsA("Tool") and v.Name:lower():find("weight") then
+                        equippedTool = v
+                        break
+                    end
+                end
+                if equippedTool then
+                    char.Humanoid:EquipTool(equippedTool)
+                    task.wait(0.1)
+                end
+            elseif toolEquipped and toolEquipped ~= equippedTool then
+                char.Humanoid:UnequipTools()
+                task.wait(0.1)
+                char.Humanoid:EquipTool(equippedTool)
+            end
+            if equippedTool then
+                pcall(function()
+                    equippedTool:Activate()
+                end)
+            end
+        end
+    end
 end)
