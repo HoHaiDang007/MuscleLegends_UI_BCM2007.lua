@@ -1,0 +1,10 @@
+-- dangdepzai loading by bcm2007
+loadstring(game:HttpGet("https://raw.githubusercontent.com/HoHaiDang007/MuscleLegends_UI_BCM2007.lua/main/ui.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/HoHaiDang007/MuscleLegends_UI_BCM2007.lua/main/auto_strength.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/HoHaiDang007/MuscleLegends_UI_BCM2007.lua/main/auto_punch.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/HoHaiDang007/MuscleLegends_UI_BCM2007.lua/main/auto_kill.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/HoHaiDang007/MuscleLegends_UI_BCM2007.lua/main/auto_rebirth.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/HoHaiDang007/MuscleLegends_UI_BCM2007.lua/main/auto_pet.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/HoHaiDang007/MuscleLegends_UI_BCM2007.lua/main/auto_aura.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/HoHaiDang007/MuscleLegends_UI_BCM2007.lua/main/stats_control.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/HoHaiDang007/MuscleLegends_UI_BCM2007.lua/main/anti_afk.lua"))()
